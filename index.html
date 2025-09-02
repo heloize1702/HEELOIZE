@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>HELOIZE-TELEFLIX</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>HELOIZE-TELEFLIX</h1>
+  </header>
+
+  <!-- LAYOUT: MENU LATERAL (ESQ) + VÍDEO (DIR) -->
+  <div class="layout">
+    <!-- LATERAL ESQUERDA -->
+    <aside class="sidebar compacto">
+      <!-- Seletor de tema -->
+      <section style="padding:12px 0;">
+        <label for="tema" style="color:#BDC3C7; margin-right:8px;">ESCOLHA O TEMA:</label>
+        <select id="tema">
+          <option value="LOUVOR">LOUVOR</option>
+          <option value="PREGAÇÃO">MENSAGENS</option>
+          <option value="INFANTIL">INFANTIL</option>
+          <option value="AULAS">AULAS</option>
+        </select>
+      </section>
+
+      <!-- Menu dinâmico gerado via JS -->
+      <nav class="nav-vertical" aria-label="Lista de vídeos do tema">
+        <ul id="menu-temas"><!-- Itens gerados via JS --></ul>
+      </nav>
+
+      <!-- Menu fixo adicional -->
+      <br>
+      <h1 style="font-size:15px; color:#f0f0f0; margin:16px 0; text-align:left;">
+  VÍDEOS EXTERNOS DO YOUTUBE👇
+</h1>
+      <nav class="nav-vertical" aria-label="Vídeos fixos">
+        <ul>
+          <li><a href="https://youtube.com/cgEnBkmcpuQ?si=paA3pkAIp3lgAmjQ" target="_blank">CantaJuego - Soy Una Taza (Version Mexico)</a></li>
+          <li><a href="https://youtube.com/zWW6PUom-8o?si=IdhsyI372HIguMJY" target="_blank">Morar no Sertão - Nem Que A Vaca Tussa</a></li>
+          <li><a href="https://youtube.com/RSXJEkzws2o?si=krxwF-8-ZuPxLo8K" target="_blank">Eu me remecho muito - Madagascar</a></li>
+          <li><a href="https://youtube.com/orxxp-3gBiE?si=oViIQTT_iWpsrC8l" target="_blank">Mariana - Galinha Pintadinha</a></li>
+          <li><a href="https://youtube.com/Tdwy3BZe61s?si=As38T49IC695wKE0" target="_blank">Pedro, Tiago, João no barquinho - 3 Palavrinhas</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- PLAYER À DIREITA -->
+    <main class="player">
+      <div class="video-box">
+        <iframe
+          class="video-frame"
+          width="540"
+          height="310"
+          src="https://www.youtube.com/embed/kNJPalON82E"
+          title="Player de vídeo"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+
+        <div class="info">
+          <h3>Eu Sou Teu Pai</h3>
+          <p>Valesca Mayssa.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Mapa de temas → lista de vídeos
+    const TEMAS = {
+      LOUVOR: [
+        { titulo: "EM FERVENTE ORAÇÃO", 
+         autor: "RAFAEL OLIVEIRA", 
+         url: "https://youtu.be/Jit_cfgD1oM?si=srDXooBaeV3zaho3" 
+        },
+        { titulo: "O EXILADO", 
+         autor: "RAFAEL OLIVEIRA", 
+         url: "https://youtu.be/ySN1gknzYJE?si=4YMoyMcXnTjz24jC" 
+        },
+        { titulo: "QUEM É ESSE", 
+         autor: "JULLIANY SOUZA", 
+         url: "https://youtu.be/0ZF5em0MTwY?si=7AXT0Vs1zJ3h0WUG" 
+        },
+        { titulo: "LIBERTA-ME DE MIM", 
+         autor: "LUMA ELPIDIO", 
+         url: "https://youtu.be/Ot8KIh6-uEU?si=tRNGwN5VwUnnAAUZ" 
+        },
+        { titulo: "ME AMA", 
+         autor: "DIANTE DO TRONO", 
+         url: "https://youtu.be/-go3Gt5TdmE?si=X8LKeW7v8QywwNMY" 
+        },
+      ],
+      PRGAÇÃO: [
+        { titulo: "DEUS TEM UMA PROMESSA", 
+         autor: "CAMILA DE BARROS", 
+         url: "https://youtu.be/uZD0ywubonY?si=gRk0Y4I3Aapin8G-" 
+        },
+        { titulo: "PRIORIZE O ESPIRITUAL", 
+         autor: "CAMILA DE BARROS", 
+         url: "https://youtu.be/8DtX--uEiEk?si=6f-cjVPvKqWhI95s" 
+        },
+      ],
+      INFANTIL: [
+        { titulo: "PEDRO, TIAGO E JOÃO NO BARQUINHO", 
+         autor: "3 PALAVRINHAS", 
+         url: "https://youtu.be/Tdwy3BZe61s?si=4Js83onTm6KdN1F6" 
+        },
+        { titulo: "ESTÁTUA DE SAL", 
+         autor: "3 PALAVRINHAS", 
+         url: "https://youtu.be/I87yflE0YcM?si=TfNhmv9dznWHAqaN" 
+        },
+      ],
+      AULAS: [
+        { titulo: "EBD ADULTO TERCEIRO TRIMESTRE", 
+         autor: "ACADEMIA DE PRGADORES", 
+         url: "https://youtu.be/-Qru3r7K5_U?si=Ym4acOZxSxdigmJX" 
+        },
+        { titulo: "EBD ADULTOS AULA 10", 
+         autor: "ACADEMIA DE PREGADORES", 
+         url: "https://youtu.be/-Qru3r7K5_U?si=jg_ylCIEACSwGAtm" 
+        },
+      ],
+    };
+
+    // Seletores
+    const selectTema = document.getElementById("tema");
+    const menuUl     = document.getElementById("menu-temas");
+    const iframeEl   = document.querySelector(".video-box iframe");
+    const infoTitulo = document.querySelector(".info h3");
+    const infoAutor  = document.querySelector(".info p");
+
+    // Converte URL normal do YouTube para /embed
+    function toEmbed(url) {
+      try {
+        const u = new URL(url);
+        const id = u.searchParams.get("v");
+        if (id) return `https://www.youtube.com/embed/${id}`;
+        if (u.hostname.includes("youtu.be")) return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+        return url;
+      } catch {
+        return url;
+      }
+    }
+
+    // Renderiza o menu com base no tema
+    function renderMenu(tema) {
+      const lista = TEMAS[tema] || [];
+      menuUl.innerHTML = "";
+
+      lista.forEach((video) => {
+        const li = document.createElement("li");
+        const a  = document.createElement("a");
+        a.href = "#";
+        a.textContent = video.titulo.toUpperCase();
+        a.setAttribute("role", "button");
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          trocarVideo(video);
+        });
+        li.appendChild(a);
+        menuUl.appendChild(li);
+      });
+
+      if (lista.length) trocarVideo(lista[0]);
+    }
+
+    // Troca o vídeo e informações
+    function trocarVideo(video) {
+      iframeEl.src = toEmbed(video.url);
+      infoTitulo.textContent = video.titulo.toUpperCase();
+      infoAutor.textContent  = `${video.autor.toUpperCase()}.`;
+    }
+
+    // Inicialização
+    renderMenu(selectTema.value);
+    selectTema.addEventListener("change", () => renderMenu(selectTema.value));
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
